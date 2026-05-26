@@ -2,7 +2,7 @@
 -- Servidor:                     127.0.0.1
 -- Versão do servidor:           10.4.32-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              12.10.0.7000
+-- HeidiSQL Versão:              12.11.0.7065
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -19,6 +19,105 @@
 DROP DATABASE IF EXISTS `exemplos`;
 CREATE DATABASE IF NOT EXISTS `exemplos` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `exemplos`;
+
+-- Copiando estrutura para tabela exemplos.aluguel
+DROP TABLE IF EXISTS `aluguel`;
+CREATE TABLE IF NOT EXISTS `aluguel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `funcionario_al` int(11) NOT NULL,
+  `cliente_al` int(11) NOT NULL,
+  `automovel_al` int(11) NOT NULL,
+  `data_aluguel` datetime NOT NULL,
+  `data_devolver` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cliente_al` (`cliente_al`),
+  KEY `automovel_al` (`automovel_al`),
+  KEY `funcionario_al` (`funcionario_al`),
+  CONSTRAINT `automovel_al` FOREIGN KEY (`automovel_al`) REFERENCES `automoveis` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `cliente_al` FOREIGN KEY (`cliente_al`) REFERENCES `pessoas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `funcionario_al` FOREIGN KEY (`funcionario_al`) REFERENCES `funcionarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Copiando dados para a tabela exemplos.aluguel: ~12 rows (aproximadamente)
+DELETE FROM `aluguel`;
+INSERT INTO `aluguel` (`id`, `funcionario_al`, `cliente_al`, `automovel_al`, `data_aluguel`, `data_devolver`) VALUES
+	(16, 1, 5, 3, '2024-05-01 08:00:00', '2024-05-04 08:00:00'),
+	(17, 2, 6, 1, '2024-05-01 10:30:00', '2024-05-05 10:30:00'),
+	(18, 3, 7, 7, '2024-05-02 09:15:00', '2024-05-06 09:15:00'),
+	(19, 4, 8, 12, '2024-05-02 14:00:00', '2024-05-05 14:00:00'),
+	(20, 5, 9, 2, '2024-05-03 11:45:00', '2024-05-10 11:45:00'),
+	(21, 6, 10, 5, '2024-05-03 16:20:00', '2024-05-06 16:20:00'),
+	(22, 7, 11, 15, '2024-05-04 08:30:00', '2024-05-07 08:30:00'),
+	(23, 8, 12, 4, '2024-05-04 13:10:00', '2024-05-08 13:10:00'),
+	(24, 9, 13, 10, '2024-05-05 09:00:00', '2024-05-12 09:00:00'),
+	(25, 10, 14, 6, '2024-05-05 15:50:00', '2024-05-08 15:50:00'),
+	(26, 11, 15, 8, '2024-05-06 10:00:00', '2024-05-11 10:00:00'),
+	(27, 12, 16, 11, '2024-05-06 14:25:00', '2024-05-09 14:25:00'),
+	(28, 13, 17, 14, '2024-05-07 08:15:00', '2024-05-10 08:15:00'),
+	(29, 14, 18, 9, '2024-05-07 17:00:00', '2024-05-14 17:00:00'),
+	(30, 15, 19, 13, '2024-05-08 11:30:00', '2024-05-12 11:30:00');
+
+-- Copiando estrutura para tabela exemplos.automoveis
+DROP TABLE IF EXISTS `automoveis`;
+CREATE TABLE IF NOT EXISTS `automoveis` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `tipo` varchar(100) NOT NULL,
+  `marca` varchar(100) NOT NULL,
+  `modelo` varchar(100) NOT NULL,
+  `ano_fabricacao` year(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Copiando dados para a tabela exemplos.automoveis: ~15 rows (aproximadamente)
+DELETE FROM `automoveis`;
+INSERT INTO `automoveis` (`id`, `nome`, `tipo`, `marca`, `modelo`, `ano_fabricacao`) VALUES
+	(1, 'Civic Touring', 'carro', 'Honda', 'Civic', '2022'),
+	(2, 'Corolla XEI', 'carro', 'Toyota', 'Corolla', '2021'),
+	(3, 'Onix LT', 'carro', 'Chevrolet', 'Onix', '2020'),
+	(4, 'HB20 Comfort', 'carro', 'Hyundai', 'HB20', '2023'),
+	(5, 'Gol Trend', 'carro', 'Volkswagen', 'Gol', '2019'),
+	(6, 'Uno Mille', 'carro', 'Fiat', 'Uno', '2018'),
+	(7, 'Renegade Sport', 'carro', 'Jeep', 'Renegade', '2022'),
+	(8, 'Tracker Premier', 'carro', 'Chevrolet', 'Tracker', '2023'),
+	(9, 'CG 160 Titan', 'moto', 'Honda', 'CG 160', '2021'),
+	(10, 'Biz 125', 'moto', 'Honda', 'Biz', '2020'),
+	(11, 'Factor 150', 'moto', 'Yamaha', 'Factor', '2022'),
+	(12, 'Fazer 250', 'moto', 'Yamaha', 'Fazer', '2021'),
+	(13, 'Ninja 400', 'moto', 'Kawasaki', 'Ninja 400', '2023'),
+	(14, 'XRE 300', 'moto', 'Honda', 'XRE 300', '2022'),
+	(15, 'Meteor 350', 'moto', 'Royal Enfield', 'Meteor 350', '2023');
+
+-- Copiando estrutura para tabela exemplos.funcionarios
+DROP TABLE IF EXISTS `funcionarios`;
+CREATE TABLE IF NOT EXISTS `funcionarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) NOT NULL,
+  `cpf` int(11) NOT NULL,
+  `telefone` int(11) NOT NULL,
+  `datanascimento` date NOT NULL,
+  `email` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Copiando dados para a tabela exemplos.funcionarios: ~15 rows (aproximadamente)
+DELETE FROM `funcionarios`;
+INSERT INTO `funcionarios` (`id`, `nome`, `cpf`, `telefone`, `datanascimento`, `email`) VALUES
+	(1, 'Ana Silva', 123456789, 988881111, '1990-05-15', 'ana.silva@email.com'),
+	(2, 'Bruno Oliveira', 234567890, 988882222, '1985-10-20', 'bruno.o@email.com'),
+	(3, 'Carla Santos', 345678901, 988883333, '1992-03-12', 'carla.santos@email.com'),
+	(4, 'Diego Souza', 456789012, 988884444, '1988-07-25', 'diego.souza@email.com'),
+	(5, 'Elena Martins', 567890123, 988885555, '1995-12-30', 'elena.m@email.com'),
+	(6, 'Fernando Costa', 678901234, 988886666, '1982-01-14', 'fernando.c@email.com'),
+	(7, 'Gisele Rocha', 789012345, 988887777, '1993-09-08', 'gisele.rocha@email.com'),
+	(8, 'Hugo Almeida', 890123456, 988888888, '1991-04-22', 'hugo.almeida@email.com'),
+	(9, 'Isabela Lima', 901234567, 988889999, '1994-11-05', 'isabela.lima@email.com'),
+	(10, 'João Pereira', 112233445, 977771111, '1987-06-18', 'joao.p@email.com'),
+	(11, 'Karina Mendes', 223344556, 977772222, '1996-02-28', 'karina.mendes@email.com'),
+	(12, 'Lucas Fernandes', 334455667, 977773333, '1989-08-10', 'lucas.f@email.com'),
+	(13, 'Mariana Gomes', 445566778, 977774444, '1992-12-15', 'mariana.g@email.com'),
+	(14, 'Natan Ribeiro', 556677889, 977775555, '1984-03-03', 'natan.r@email.com'),
+	(15, 'Olívia Castro', 667788990, 977776666, '1997-07-07', 'olivia.castro@email.com');
 
 -- Copiando estrutura para tabela exemplos.pessoas
 DROP TABLE IF EXISTS `pessoas`;
