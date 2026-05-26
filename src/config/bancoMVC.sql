@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS `aluguel` (
   CONSTRAINT `automovel_al` FOREIGN KEY (`automovel_al`) REFERENCES `automoveis` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `cliente_al` FOREIGN KEY (`cliente_al`) REFERENCES `pessoas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `funcionario_al` FOREIGN KEY (`funcionario_al`) REFERENCES `funcionarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Copiando dados para a tabela exemplos.aluguel: ~12 rows (aproximadamente)
+-- Copiando dados para a tabela exemplos.aluguel: ~15 rows (aproximadamente)
 DELETE FROM `aluguel`;
 INSERT INTO `aluguel` (`id`, `funcionario_al`, `cliente_al`, `automovel_al`, `data_aluguel`, `data_devolver`) VALUES
 	(16, 1, 5, 3, '2024-05-01 08:00:00', '2024-05-04 08:00:00'),
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `automoveis` (
   `modelo` varchar(100) NOT NULL,
   `ano_fabricacao` year(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Copiando dados para a tabela exemplos.automoveis: ~15 rows (aproximadamente)
 DELETE FROM `automoveis`;
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `funcionarios` (
   `datanascimento` date NOT NULL,
   `email` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Copiando dados para a tabela exemplos.funcionarios: ~15 rows (aproximadamente)
 DELETE FROM `funcionarios`;
@@ -123,42 +123,33 @@ INSERT INTO `funcionarios` (`id`, `nome`, `cpf`, `telefone`, `datanascimento`, `
 DROP TABLE IF EXISTS `pessoas`;
 CREATE TABLE IF NOT EXISTS `pessoas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_razao_social` varchar(255) NOT NULL,
-  `nome_social_fantasia` varchar(255) DEFAULT NULL,
+  `nome_razao_social` varchar(255) DEFAULT NULL,
   `cep` char(8) DEFAULT NULL,
-  `endereco` varchar(255) DEFAULT NULL,
-  `numero` varchar(20) DEFAULT NULL,
-  `bairro` varchar(100) DEFAULT NULL,
-  `cidade` varchar(100) DEFAULT NULL,
-  `estado` char(2) DEFAULT NULL,
-  `pais` varchar(50) DEFAULT 'Brasil',
-  `documento` varchar(14) NOT NULL,
-  `tipo` enum('CPF','CNPJ') NOT NULL,
+  `documento` varchar(14) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `data_cadastro` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `documento` (`documento`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `data_cadastro` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Copiando dados para a tabela exemplos.pessoas: ~16 rows (aproximadamente)
+-- Copiando dados para a tabela exemplos.pessoas: ~17 rows (aproximadamente)
 DELETE FROM `pessoas`;
-INSERT INTO `pessoas` (`id`, `nome_razao_social`, `nome_social_fantasia`, `cep`, `endereco`, `numero`, `bairro`, `cidade`, `estado`, `pais`, `documento`, `tipo`, `email`, `data_cadastro`) VALUES
-	(5, 'Breno Guntendorfer Cabrera', 'Brenao Corinthiano', '19030260', 'Avenida Doutor Ibrain Nobre', '1300', 'Parque Furquim', 'Presidente Prudente', 'SP', 'Brasil', '43310149838', 'CPF', 'brenocabrera@gmail.com', '2026-05-05 12:19:35'),
-	(6, 'João Silva Santos', 'João Silva', '30130100', 'Rua das Flores', '123', 'Centro', 'Belo Horizonte', 'MG', 'Brasil', '12345678901', 'CPF', 'joao.silva@email.com', '2026-05-26 16:34:32'),
-	(7, 'Maria Oliveira Costa', NULL, '22041020', 'Avenida Atlântica', '456', 'Copacabana', 'Rio de Janeiro', 'RJ', 'Brasil', '98765432100', 'CPF', 'maria.oliveira@email.com', '2026-05-26 16:34:32'),
-	(8, 'Tech Solutions LTDA', 'Tech Solutions', '01310900', 'Avenida Paulista', '1000', 'Bela Vista', 'São Paulo', 'SP', 'Brasil', '12345678000195', 'CNPJ', 'contato@techsolutions.com.br', '2026-05-26 16:34:32'),
-	(9, 'Ana Clara Mendes', NULL, '69005010', 'Rua Eduardo Ribeiro', '789', 'Centro', 'Manaus', 'AM', 'Brasil', '45678912345', 'CPF', 'ana.mendes@email.com', '2026-05-26 16:34:32'),
-	(10, 'Construções ABC Ltda', 'Construtora ABC', '40015010', 'Rua Chile', '250', 'Comércio', 'Salvador', 'BA', 'Brasil', '11223344000188', 'CNPJ', 'orcamento@abcconstrucoes.com.br', '2026-05-26 16:34:32'),
-	(11, 'Carlos Eduardo Lima', 'Cadulima', '79002020', 'Rua 14 de Julho', '567', 'Centro', 'Campo Grande', 'MS', 'Brasil', '32165498701', 'CPF', 'carlos.lima@email.com', '2026-05-26 16:34:32'),
-	(12, 'Supermercados Delta SA', 'Delta', '88010010', 'Rua Bocaiuva', '1200', 'Centro', 'Florianópolis', 'SC', 'Brasil', '99887766000155', 'CNPJ', 'contato@delta.com.br', '2026-05-26 16:34:32'),
-	(13, 'Laura Fernanda Souza', NULL, '51020010', 'Avenida Engenheiro Domingos Ferreira', '890', 'Boa Viagem', 'Recife', 'PE', 'Brasil', '14785236901', 'CPF', 'laura.souza@email.com', '2026-05-26 16:34:32'),
-	(14, 'Lucas Gabriel Rocha', NULL, '60150160', 'Rua Monsenhor Furtado', '345', 'Dionísio Torres', 'Fortaleza', 'CE', 'Brasil', '25874136902', 'CPF', 'lucas.rocha@email.com', '2026-05-26 16:34:32'),
-	(15, 'Indústria Metalúrgica XYZ', 'Metal XYZ', '30140000', 'Rua Espírito Santo', '980', 'Funcionários', 'Belo Horizonte', 'MG', 'Brasil', '44556677000122', 'CNPJ', 'vendas@metalxyz.com.br', '2026-05-26 16:34:32'),
-	(16, 'Fernanda Costa Almeida', 'Nanda Almeida', '20271030', 'Rua Barão de Mesquita', '432', 'Tijuca', 'Rio de Janeiro', 'RJ', 'Brasil', '36985214703', 'CPF', 'fernanda.almeida@email.com', '2026-05-26 16:34:32'),
-	(17, 'Farmácia Popular Ltda', 'Farmácia Popular', '57020030', 'Avenida Fernandes Lima', '1500', 'Farol', 'Maceió', 'AL', 'Brasil', '77889966000133', 'CNPJ', 'contato@farmaciapopular.com.br', '2026-05-26 16:34:32'),
-	(18, 'Rafael Mendes Oliveira', NULL, '88040001', 'Rua Almirante Lamego', '210', 'Trindade', 'Florianópolis', 'SC', 'Brasil', '74185296304', 'CPF', 'rafael.mendes@email.com', '2026-05-26 16:34:32'),
-	(19, 'Consultoria Financeira Alpha', 'Alpha Consult', '01310921', 'Rua Haddock Lobo', '595', 'Cerqueira César', 'São Paulo', 'SP', 'Brasil', '55443322000144', 'CNPJ', 'contato@alphaconsult.com.br', '2026-05-26 16:34:32'),
-	(20, 'Beatriz Santos Lima', NULL, '79002410', 'Avenida Afonso Pena', '678', 'Amambaí', 'Campo Grande', 'MS', 'Brasil', '85214796305', 'CPF', 'beatriz.lima@email.com', '2026-05-26 16:34:32');
+INSERT INTO `pessoas` (`id`, `nome_razao_social`, `cep`, `documento`, `email`, `data_cadastro`) VALUES
+	(5, 'Breno Guntendorfer Cabrera', '19030260', '43310149838', 'brenocabrera@gmail.com', '2026-05-05 12:19:35'),
+	(6, 'João Silva Santos', '30130100', '12345678901', 'joao.silva@email.com', '2026-05-26 16:34:32'),
+	(7, 'Maria Oliveira Costa', '22041020', '98765432100', 'maria.oliveira@email.com', '2026-05-26 16:34:32'),
+	(8, 'Tech Solutions LTDA', '01310900', '12345678000195', 'contato@techsolutions.com.br', '2026-05-26 16:34:32'),
+	(9, 'Ana Clara Mendes', '69005010', '45678912345', 'ana.mendes@email.com', '2026-05-26 16:34:32'),
+	(10, 'Construções ABC Ltda', '40015010', '11223344000188', 'orcamento@abcconstrucoes.com.br', '2026-05-26 16:34:32'),
+	(11, 'Carlos Eduardo Lima', '79002020', '32165498701', 'carlos.lima@email.com', '2026-05-26 16:34:32'),
+	(12, 'Supermercados Delta SA', '88010010', '99887766000155', 'contato@delta.com.br', '2026-05-26 16:34:32'),
+	(13, 'Laura Fernanda Souza', '51020010', '14785236901', 'laura.souza@email.com', '2026-05-26 16:34:32'),
+	(14, 'Lucas Gabriel Rocha', '60150160', '25874136902', 'lucas.rocha@email.com', '2026-05-26 16:34:32'),
+	(15, 'Indústria Metalúrgica XYZ', '30140000', '44556677000122', 'vendas@metalxyz.com.br', '2026-05-26 16:34:32'),
+	(16, 'Fernanda Costa Almeida', '20271030', '36985214703', 'fernanda.almeida@email.com', '2026-05-26 16:34:32'),
+	(17, 'Farmácia Popular Ltda', '57020030', '77889966000133', 'contato@farmaciapopular.com.br', '2026-05-26 16:34:32'),
+	(18, 'Rafael Mendes Oliveira', '88040001', '74185296304', 'rafael.mendes@email.com', '2026-05-26 16:34:32'),
+	(19, 'Consultoria Financeira Alpha', '01310921', '55443322000144', 'contato@alphaconsult.com.br', '2026-05-26 16:34:32'),
+	(20, 'Beatriz Santos Lima', '79002410', '85214796305', 'beatriz.lima@email.com', '2026-05-26 16:34:32');
 
 -- Copiando estrutura para tabela exemplos.produtos
 DROP TABLE IF EXISTS `produtos`;

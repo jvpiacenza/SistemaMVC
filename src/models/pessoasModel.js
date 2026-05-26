@@ -12,21 +12,13 @@ const Pessoa = {
     criar: async (dados) => {
         const query = `
         INSERT INTO pessoas
-        (nome_razao_social, nome_social_fantasia, cep, endereco, numero, bairro, cidade, estado, pais, documento, tipo, email)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (nome_razao_social, cep, documento, email)
+        VALUES (?, ?, ?, ?)
         `;
         const values = [
             dados.nome_razao_social,
-            dados.nome_social_fantasia || null,
             dados.cep || null,
-            dados.endereco || null,
-            dados.numero || null,
-            dados.bairro || null,
-            dados.cidade || null,
-            dados.estado || null,
-            dados.pais || 'Brasil',
             dados.documento,
-            dados.tipo,
             dados.email || null
         ];
         const [result] = await pool.execute(query, values);
@@ -35,23 +27,13 @@ const Pessoa = {
     atualizar: async (id, dados) => {
         const query = `
         UPDATE pessoas
-        SET nome_razao_social = ?, nome_social_fantasia = ?, cep = ?, endereco = ?,
-        numero = ?, bairro = ?, cidade = ?, estado = ?, pais = ?, documento = ?,
-        tipo = ?, email = ?
+        SET nome_razao_social = ?, cep = ?, documento = ?,email = ?
         WHERE id = ?
         `;
         const values = [
             dados.nome_razao_social,
-            dados.nome_social_fantasia || null,
             dados.cep || null,
-            dados.endereco || null,
-            dados.numero || null,
-            dados.bairro || null,
-            dados.cidade || null,
-            dados.estado || null,
-            dados.pais || 'Brasil',
             dados.documento,
-            dados.tipo,
             dados.email || null,
             id
         ];
