@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+
+        .caixa {
+            background-color: #ffffff;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+
+        .titulo-pagina {
+            color: #1a56a0;
+            border-bottom: 2px solid #1a56a0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #modalPesquisa {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #modalPesquisa .modal-conteudo {
+            background: white;
+            max-width: 800px;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .btn-fechar {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="caixa">
+
+            <h2 class="titulo-pagina">Cadastro de Produto</h2>
+
+            <button type="button" class="button secondary" onclick="abrirModal()">
+                Pesquisar Produto
+            </button>
+            <button type="button" class="button secondary" onclick="limparFormulario()">
+                Novo Cadastro
+            </button>
+
+            <hr>
+
+            <form id="formProduto">
+                <input type="hidden" id="produto_id">
+
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12 medium-6">
+                        <label>Nome
+                            <input type="text" id="nome" required>
+                        </label>
+                    </div>
+                    <div class="cell small-12 medium-6">
+                        <label>Categoria
+                            <input type="text" id="categoria">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12 medium-12">
+                        <label>Descrição
+                            <input type="text" id="descricao" required>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12 medium-6">
+                        <label>Estoque
+                            <input type="number" id="estoque" required>
+                        </label>
+                    </div>
+                    <div class="cell small-12 medium-6">
+                        <label>Preço
+                            <input type="number" id="preco">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- type="button" para não submeter o form, onclick chama salvar() -->
+                <button type="button" class="button primary" onclick="salvar()">
+                    Salvar
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modalPesquisa">
+        <div class="modal-conteudo callout">
+            <span class="btn-fechar" onclick="fecharModal()">✕ Fechar</span>
+            <h3>Registros Cadastrados</h3>
+            <table class="hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Categoria</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaProdutos">
+                    <!-- Preenchido pelo JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modalPesquisa');
+        const form  = document.getElementById('formProduto');
+
+        // CREATE ou UPDATE dependendo se há ID preenchido
+        async function salvar() {
+            const id        = document.getElementById('produto_id').value;
+            const nome      = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const preco     = document.getElementById('preco').value;
+            const estoque   = document.getElementById('estoque').value;
+            const categoria = document.getElementById('categoria').value;
+
+            if (!nome || !descricao || !estoque) {
+                alert('Preencha os campos obrigatórios: Nome, Descrição e Estoque.');
+                return;
+            }
+
+            if (id) {
+                // UPDATE
+                const resposta = await fetch('http://localhost:3000/atualizar_produtos', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, nome, descricao, preco, estoque, categoria })
+                });
+                if (resposta.ok) {
+                    alert('Produto atualizado!');
+                    limparFormulario();
+                }
+            } else {
+                // CREATE
+                const resposta = await fetch('http://localhost:3000/cadastrar_produtos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, descricao, preco, estoque, categoria })
+                });
+                if (resposta.ok) {
+                    alert('Produto cadastrado!');
+                    limparFormulario();
+                }
+            }
+        }
+
+        // READ — carrega os produtos na tabela do modal
+        async function carregarProdutos() {
+            const resposta = await fetch('http://localhost:3000/ver_produtos');
+            const dados    = await resposta.json();
+            const tbody    = document.getElementById('tabelaProdutos');
+
+            tbody.innerHTML = '';
+            dados.forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.nome}</td>
+                        <td>${p.descricao}</td>
+                        <td>${p.preco}</td>
+                        <td>${p.estoque}</td>
+                        <td>${p.categoria}</td>
+                        <td>
+                            <button class="button small warning"
+                                onclick="editarProduto(${p.id},'${p.nome}','${p.descricao}',${p.preco},${p.estoque},'${p.categoria}')">
+                                Editar
+                            </button>
+                            <button class="button small alert"
+                                onclick="deletarProduto(${p.id})">
+                                Excluir
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        // Preenche o formulário com os dados do produto escolhido para edição
+        function editarProduto(id, nome, descricao, preco, estoque, categoria) {
+            document.getElementById('produto_id').value = id;
+            document.getElementById('nome').value       = nome;
+            document.getElementById('descricao').value  = descricao;
+            document.getElementById('preco').value      = preco;
+            document.getElementById('estoque').value    = estoque;
+            document.getElementById('categoria').value  = categoria;
+            fecharModal();
+        }
+
+        // DELETE
+        async function deletarProduto(id) {
+            if (!confirm('Excluir este produto?')) return;
+
+            const resposta = await fetch('http://localhost:3000/deletar_produtos', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            if (resposta.ok) {
+                alert('Produto excluído!');
+                carregarProdutos();
+            }
+        }
+
+        function limparFormulario() {
+            form.reset();
+            document.getElementById('produto_id').value = '';
+        }
+
+        function abrirModal() {
+            modal.style.display = 'block';
+            carregarProdutos();
+        }
+
+        function fecharModal() {
+            modal.style.display = 'none';
+        }
+
+        // Fecha o modal clicando fora dele
+        window.onclick = function(e) {
+            if (e.target === modal) fecharModal();
+        };
+    </script>
+</body>
+</html>
